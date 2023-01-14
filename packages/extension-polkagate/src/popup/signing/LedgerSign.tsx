@@ -48,6 +48,7 @@ function LedgerSign({ accountIndex, addressOffset, error, genesisHash, onSignatu
 
       setError(null);
       setIsBusy(true);
+
       ledger.sign(payload.toU8a(true), accountIndex, addressOffset)
         .then((signature) => {
           onSignature(signature);

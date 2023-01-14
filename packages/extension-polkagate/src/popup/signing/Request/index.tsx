@@ -52,6 +52,11 @@ export default function Request({ account: { accountIndex, addressOffset, isExte
   const { t } = useTranslation();
   const theme = useTheme();
 
+  console.log('payload:',payload);
+  console.log('payload:',JSON.parse(JSON.stringify(payload)));
+  console.log('accountIndex:',accountIndex)
+  console.log('addressOffset:',addressOffset)
+
   useEffect((): void => {
     const payload = request.payload;
 

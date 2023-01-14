@@ -110,6 +110,8 @@ export default function AccountDetails(): React.ReactElement {
   const [showStakingOptions, setShowStakingOptions] = useState<boolean>(false);
   const chainName = (newChain?.name ?? chain?.name)?.replace(' Relay Chain', '')?.replace(' Network', '');
 
+  const sendDisabled = !availableProxiesForTransfer?.length && account?.isExternal && !account?.isHardware;
+
   const resetToDefaults = useCallback(() => {
     setNewEndpoint(undefined);
     setRecoded(defaultRecoded);
@@ -175,7 +177,7 @@ export default function AccountDetails(): React.ReactElement {
   }, [address, chainName]);
 
   const goToSend = useCallback(() => {
-    if (!availableProxiesForTransfer?.length && account?.isExternal) {
+    if (sendDisabled) {
       return; // Account is external and does not have any available proxy for transfer funds
     }
 
@@ -183,7 +185,7 @@ export default function AccountDetails(): React.ReactElement {
       pathname: `/send/${address}/`,
       state: { api, balances, price: price?.amount }
     });
-  }, [availableProxiesForTransfer?.length, account?.isExternal, history, address, balances, api, price]);
+  }, [sendDisabled, history, address, api, balances, price?.amount]);
 
   const goToReceive = useCallback(() => {
     history.push({
@@ -295,19 +297,19 @@ export default function AccountDetails(): React.ReactElement {
           </>
           : <StakingOption showStakingOptions={showStakingOptions} />
         }
-        <Grid container justifyContent='space-around' sx={{ bgcolor:'background.default', borderTop: '2px solid', borderTopColor: 'secondary.main', bottom: 0, height:'62px', left: '4%', position: 'absolute', pt: '7px', pb: '5px', width: '92%' }} >
+        <Grid container justifyContent='space-around' sx={{ bgcolor: 'background.default', borderTop: '2px solid', borderTopColor: 'secondary.main', bottom: 0, height: '62px', left: '4%', position: 'absolute', pt: '7px', pb: '5px', width: '92%' }} >
           <HorizontalMenuItem
             divider
             icon={
               <FontAwesomeIcon
-                color={(!availableProxiesForTransfer?.length && account?.isExternal) ? theme.palette.action.disabledBackground : theme.palette.text.primary}
+                color={sendDisabled ? theme.palette.action.disabledBackground : theme.palette.text.primary}
                 icon={faPaperPlane}
                 size='lg'
               />
             }
-            isLoading={availableProxiesForTransfer === undefined && account?.isExternal}
+            isLoading={availableProxiesForTransfer === undefined && sendDisabled}
             onClick={goToSend}
-            textDisabled={(!availableProxiesForTransfer?.length && account?.isExternal)}
+            textDisabled={sendDisabled}
             title={t<string>('Send')}
           />
           <HorizontalMenuItem
