@@ -70,17 +70,14 @@ export default function Request({ account: { accountIndex, addressOffset, isExte
     }
   }, [request]);
 
-  const _onSignature = useCallback(
-    ({ signature }: { signature: HexString }): void => {
-      approveSignSignature(signId, signature)
-        .then(() => onAction())
-        .catch((error: Error): void => {
-          setError(error.message);
-          console.error(error);
-        });
-    },
-    [onAction, setError, signId]
-  );
+  const _onSignature = useCallback(({ signature }: { signature: HexString }): void => {
+    approveSignSignature(signId, signature)
+      .then(() => onAction())
+      .catch((error: Error): void => {
+        setError(error.message);
+        console.error(error);
+      });
+  }, [onAction, setError, signId]);
 
   if (payload !== null) {
     const json = request.payload as SignerPayloadJSON;
